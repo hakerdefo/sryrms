@@ -1,0 +1,475 @@
+#!/usr/bin/env bash
+########
+function Main_Menu (){
+
+    if [ "$EUID" -ne 0 ]; then
+        printf "\033c"
+        echo ""
+        { for i in {16..51} {51..16}; do echo -en "\e[38;5;${i}m#\e[0m"; done; echo; }
+        echo ""
+        echo -e '\e[38;5;82m' "You must run \"sryrms\" script using \"sudo\" or as the root user."
+        echo -e '\e[38;5;82m' "Hint : \"sudo sryrms\" or \"su -c 'sryrms'\""
+        echo ""
+        { for i in {16..51} {51..16}; do echo -en "\e[38;5;${i}m#\e[0m"; done; echo; }
+        echo ""
+        tput sgr0
+        exit 1
+    fi
+
+    if ! wget --spider --user-agent="Mozilla/5.0 Gecko/20100101" --no-check-certificate --quiet --timeout=30 -q "www.google.com" -O /dev/null; then
+        printf "\033c"
+        echo ""
+        { for i in {16..51} {51..16}; do echo -en "\e[38;5;${i}m#\e[0m"; done; echo; }
+        echo ""
+        echo -e '\e[38;5;82m' "No active internet connection available!!"
+        echo -e '\e[38;5;82m' "Please check your internet connectivity!!"
+        echo ""
+        { for i in {16..51} {51..16}; do echo -en "\e[38;5;${i}m#\e[0m"; done; echo; }
+        echo ""
+        tput sgr0
+        exit 1
+    fi
+
+    type wget >/dev/null 2>&1 || { printf "\033c"; echo -e ""; for i in {16..51} {51..16}; do echo -en "\e[38;5;${i}m#\e[0m"; done; echo; echo -e ""; echo -e '\e[38;5;82m'"A required SryRMS dependency \"Wget\" is unavailable"; echo -e '\e[38;5;82m'"\"Wget\" is available for almost all linux distros."; echo -e '\e[38;5;82m'"Please install \"wget\" using your package manager."; echo -e '\e[38;5;82m'"Please visit the homepage of \"Wget\" for more info"; echo -e '\e[38;5;82m'"https://www.gnu.org/software/wget/"; echo -e ""; for i in {16..51} {51..16}; do echo -en "\e[38;5;${i}m#\e[0m"; done; echo; echo -e ""; tput sgr0; exit 1; }
+    type gpg >/dev/null 2>&1 || { printf "\033c"; echo -e ""; for i in {16..51} {51..16}; do echo -en "\e[38;5;${i}m#\e[0m"; done; echo; echo -e ""; echo -e '\e[38;5;82m'"A required SryRMS dependency \"GnuPG\" is unavailable"; echo -e '\e[38;5;82m'"\"GnuPG\" is available for almost all linux distros."; echo -e '\e[38;5;82m'"Please install \"gpg\" using your package manager."; echo -e '\e[38;5;82m'"Please visit the homepage of \"GnuPG\" for more info"; echo -e '\e[38;5;82m'"https://www.gnupg.org/"; echo -e ""; for i in {16..51} {51..16}; do echo -en "\e[38;5;${i}m#\e[0m"; done; echo; echo -e ""; tput sgr0; exit 1; }
+
+    printf "\033c"
+    echo -e "** SryRMS<>MENU ****************************"
+    echo -e ""
+    echo -e "01 Install Brave browser"
+    echo -e "02 Install Chrome browser"
+    echo -e "03 Install Edge browser"
+    echo -e "04 Install Opera browser"
+    echo -e "05 Install Vivaldi browser"
+    echo -e "06 Install Spotify"
+    echo -e "07 Install Visual Studio Code"
+    echo -e "08 Install Element"
+    echo -e "09 Install Jami"
+    echo -e "10 Install Signal"
+    echo -e "11 Install Skype"
+    echo -e "12 Install Teams"
+    echo -e "13 Install ONLYOFFICE"
+    echo -e "14 Install Flatpak"
+    echo -e "Q  Quit SryRMS"
+    echo -e ""
+    echo -e "*******************************************"
+    echo -e "   Enter your choice: [01-14-Q]"
+    echo -e ""
+    read -er choice
+    case $choice in
+        01 | 1)
+            printf "\033c"
+            if ! type brave-browser >/dev/null 2>&1; then
+                Base_Path=$(basename "$0")
+                Time_Stamp=$(date +%Y%m%d%H%M%S)
+                Tmp_Dir=$(mktemp -dt "$Base_Path.$Time_Stamp.XXXXXXXXXX")
+                cd "$Tmp_Dir" || { printf "\033c"; echo -e ""; for i in {16..51} {51..16}; do echo -en "\e[38;5;${i}m#\e[0m"; done; echo; echo -e ""; echo -e '\e[38;5;82m'"Something went south. Exiting..."; echo -e ""; for i in {16..51} {51..16}; do echo -en "\e[38;5;${i}m#\e[0m"; done; echo; echo -e ""; tput sgr0; exit 1; }
+                if [ -f "/usr/share/keyrings/brave-browser-archive-keyring.gpg" ]; then
+                    rm -f "/usr/share/keyrings/brave-browser-archive-keyring.gpg"
+                fi
+                if [ -f "/etc/apt/sources.list.d/brave-browser-release.list" ]; then
+                    rm -f "/etc/apt/sources.list.d/brave-browser-release.list"
+                fi
+                wget -qO- --user-agent="Mozilla/5.0 Gecko/20100101" --timeout=30 "https://brave-browser-apt-release.s3.brave.com/brave-browser-archive-keyring.gpg" | gpg --dearmor --yes --quiet -o "/usr/share/keyrings/brave-browser-archive-keyring.gpg"
+                sh -c 'echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/brave-browser-archive-keyring.gpg] https://brave-browser-apt-release.s3.brave.com/ stable main" > /etc/apt/sources.list.d/brave-browser-release.list'
+                apt-get --yes update
+                apt-get --yes install brave-browser
+                echo -e ""
+                read -rsp $'Press any key to continue...\n' -n1
+                rm -rf "$Tmp_Dir"
+                Main_Menu
+            else
+                printf "\033c"
+                echo -e "Brave browser is already installed."
+                echo -e ""
+                read -rsp $'Press any key to continue...\n' -n1
+                Main_Menu
+            fi
+            ;;
+        02 | 2)
+            printf "\033c"
+            if ! type google-chrome-stable >/dev/null 2>&1; then
+                Base_Path=$(basename "$0")
+                Time_Stamp=$(date +%Y%m%d%H%M%S)
+                Tmp_Dir=$(mktemp -dt "$Base_Path.$Time_Stamp.XXXXXXXXXX")
+                cd "$Tmp_Dir" || { printf "\033c"; echo -e ""; for i in {16..51} {51..16}; do echo -en "\e[38;5;${i}m#\e[0m"; done; echo; echo -e ""; echo -e '\e[38;5;82m'"Something went south. Exiting..."; echo -e ""; for i in {16..51} {51..16}; do echo -en "\e[38;5;${i}m#\e[0m"; done; echo; echo -e ""; tput sgr0; exit 1; }
+                if [ -f "/usr/share/keyrings/google-chrome-keyring.gpg" ]; then
+                    rm -f "/usr/share/keyrings/google-chrome-keyring.gpg"
+                fi
+                if [ -f "/etc/apt/sources.list.d/google-chrome.list" ]; then
+                    rm -f "/etc/apt/sources.list.d/google-chrome.list"
+                fi
+                wget -qO- --user-agent="Mozilla/5.0 Gecko/20100101" --timeout=30 "https://dl.google.com/linux/linux_signing_key.pub" | gpg --dearmor --yes --quiet -o "/usr/share/keyrings/google-chrome-keyring.gpg"
+                sh -c 'echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/google-chrome-keyring.gpg] https://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list'
+                apt-get --yes update
+                apt-get --yes install google-chrome-stable
+                echo -e ""
+                read -rsp $'Press any key to continue...\n' -n1
+                rm -rf "$Tmp_Dir"
+                Main_Menu
+            else
+                printf "\033c"
+                echo -e "Chrome browser is already installed."
+                echo -e ""
+                read -rsp $'Press any key to continue...\n' -n1
+                Main_Menu
+            fi
+            ;;
+        03 | 3)
+            printf "\033c"
+            if ! type microsoft-edge-stable >/dev/null 2>&1; then
+                Base_Path=$(basename "$0")
+                Time_Stamp=$(date +%Y%m%d%H%M%S)
+                Tmp_Dir=$(mktemp -dt "$Base_Path.$Time_Stamp.XXXXXXXXXX")
+                cd "$Tmp_Dir" || { printf "\033c"; echo -e ""; for i in {16..51} {51..16}; do echo -en "\e[38;5;${i}m#\e[0m"; done; echo; echo -e ""; echo -e '\e[38;5;82m'"Something went south. Exiting..."; echo -e ""; for i in {16..51} {51..16}; do echo -en "\e[38;5;${i}m#\e[0m"; done; echo; echo -e ""; tput sgr0; exit 1; }
+                if [ -f "/usr/share/keyrings/microsoft.gpg" ]; then
+                    rm -f "/usr/share/keyrings/microsoft.gpg"
+                fi
+                if [ -f "/etc/apt/sources.list.d/microsoft-edge.list" ]; then
+                    rm -f "/etc/apt/sources.list.d/microsoft-edge.list"
+                fi
+                wget -qO- --user-agent="Mozilla/5.0 Gecko/20100101" --timeout=30 "https://packages.microsoft.com/keys/microsoft.asc" | gpg --dearmor --yes --quiet -o "/usr/share/keyrings/microsoft.gpg"
+                sh -c 'echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/microsoft.gpg] https://packages.microsoft.com/repos/edge stable main" > /etc/apt/sources.list.d/microsoft-edge.list'
+                apt-get --yes update
+                apt-get --yes install microsoft-edge-stable
+                echo -e ""
+                read -rsp $'Press any key to continue...\n' -n1
+                rm -rf "$Tmp_Dir"
+            else
+                printf "\033c"
+                echo -e "Edge browser is already installed."
+                echo -e ""
+                read -rsp $'Press any key to continue...\n' -n1
+                Main_Menu
+            fi
+            ;;
+        04 | 4)
+            printf "\033c"
+            if ! type opera-stable >/dev/null 2>&1; then
+                Base_Path=$(basename "$0")
+                Time_Stamp=$(date +%Y%m%d%H%M%S)
+                Tmp_Dir=$(mktemp -dt "$Base_Path.$Time_Stamp.XXXXXXXXXX")
+                cd "$Tmp_Dir" || { printf "\033c"; echo -e ""; for i in {16..51} {51..16}; do echo -en "\e[38;5;${i}m#\e[0m"; done; echo; echo -e ""; echo -e '\e[38;5;82m'"Something went south. Exiting..."; echo -e ""; for i in {16..51} {51..16}; do echo -en "\e[38;5;${i}m#\e[0m"; done; echo; echo -e ""; tput sgr0; exit 1; }
+                if [ -f "/usr/share/keyrings/opera-browser.gpg" ]; then
+                    rm -f "/usr/share/keyrings/opera-browser.gpg"
+                fi
+                if [ -f "/etc/apt/sources.list.d/opera-archive.list" ]; then
+                    rm -f "/etc/apt/sources.list.d/opera-archive.list"
+                fi
+                wget -qO- --user-agent="Mozilla/5.0 Gecko/20100101" --timeout=30 "https://deb.opera.com/archive.key" | gpg --dearmor --yes --quiet -o "/usr/share/keyrings/opera-browser.gpg"
+                sh -c 'echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/opera-browser.gpg] https://deb.opera.com/opera-stable/ stable non-free" > /etc/apt/sources.list.d/opera-archive.list'
+                apt-get --yes update
+                apt-get --yes install opera-stable
+                echo -e ""
+                read -rsp $'Press any key to continue...\n' -n1
+                rm -rf "$Tmp_Dir"
+            else
+                printf "\033c"
+                echo -e "Opera browser is already installed."
+                echo -e ""
+                read -rsp $'Press any key to continue...\n' -n1
+                Main_Menu
+            fi
+            ;;
+        05 | 5)
+            printf "\033c"
+            if ! type vivaldi-stable >/dev/null 2>&1; then
+                Base_Path=$(basename "$0")
+                Time_Stamp=$(date +%Y%m%d%H%M%S)
+                Tmp_Dir=$(mktemp -dt "$Base_Path.$Time_Stamp.XXXXXXXXXX")
+                cd "$Tmp_Dir" || { printf "\033c"; echo -e ""; for i in {16..51} {51..16}; do echo -en "\e[38;5;${i}m#\e[0m"; done; echo; echo -e ""; echo -e '\e[38;5;82m'"Something went south. Exiting..."; echo -e ""; for i in {16..51} {51..16}; do echo -en "\e[38;5;${i}m#\e[0m"; done; echo; echo -e ""; tput sgr0; exit 1; }
+                if [ -f "/usr/share/keyrings/vivaldi-browser.gpg" ]; then
+                    rm -f "/usr/share/keyrings/vivaldi-browser.gpg"
+                fi
+                if [ -f "/etc/apt/sources.list.d/vivaldi-archive.list" ]; then
+                    rm -f "/etc/apt/sources.list.d/vivaldi-archive.list"
+                fi
+                wget -qO- --user-agent="Mozilla/5.0 Gecko/20100101" --timeout=30 "https://repo.vivaldi.com/archive/linux_signing_key.pub" | gpg --dearmor --yes --quiet -o "/usr/share/keyrings/vivaldi-browser.gpg"
+                sh -c 'echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/vivaldi-browser.gpg] https://repo.vivaldi.com/archive/deb/ stable main" > /etc/apt/sources.list.d/vivaldi-archive.list'
+                apt-get --yes update
+                apt-get --yes install vivaldi-stable
+                echo -e ""
+                read -rsp $'Press any key to continue...\n' -n1
+                rm -rf "$Tmp_Dir"
+            else
+                printf "\033c"
+                echo -e "Vivaldi browser is already installed."
+                echo -e ""
+                read -rsp $'Press any key to continue...\n' -n1
+                Main_Menu
+            fi
+            ;;
+        06 | 6)
+            printf "\033c"
+            if ! type spotify-client >/dev/null 2>&1; then
+                Base_Path=$(basename "$0")
+                Time_Stamp=$(date +%Y%m%d%H%M%S)
+                Tmp_Dir=$(mktemp -dt "$Base_Path.$Time_Stamp.XXXXXXXXXX")
+                cd "$Tmp_Dir" || { printf "\033c"; echo -e ""; for i in {16..51} {51..16}; do echo -en "\e[38;5;${i}m#\e[0m"; done; echo; echo -e ""; echo -e '\e[38;5;82m'"Something went south. Exiting..."; echo -e ""; for i in {16..51} {51..16}; do echo -en "\e[38;5;${i}m#\e[0m"; done; echo; echo -e ""; tput sgr0; exit 1; }
+                if [ -f "/usr/share/keyrings/spotify.gpg" ]; then
+                    rm -f "/usr/share/keyrings/spotify.gpg"
+                fi
+                if [ -f "/etc/apt/sources.list.d/spotify.list" ]; then
+                    rm -f "/etc/apt/sources.list.d/spotify.list"
+                fi
+                wget -qO- --user-agent="Mozilla/5.0 Gecko/20100101" --timeout=30 "https://download.spotify.com/debian/pubkey_7A3A762FAFD4A51F.gpg" | gpg --dearmor --yes --quiet -o "/usr/share/keyrings/spotify.gpg"
+                sh -c 'echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/spotify.gpg] http://repository.spotify.com stable non-free" > /etc/apt/sources.list.d/spotify.list'
+                apt-get --yes update
+                apt-get --yes install spotify-client
+                echo -e ""
+                read -rsp $'Press any key to continue...\n' -n1
+                rm -rf "$Tmp_Dir"
+            else
+                printf "\033c"
+                echo -e "Spotify is already installed."
+                echo -e ""
+                read -rsp $'Press any key to continue...\n' -n1
+                Main_Menu
+            fi
+            ;;
+        07 | 7)
+            printf "\033c"
+            if ! type code >/dev/null 2>&1; then
+                Base_Path=$(basename "$0")
+                Time_Stamp=$(date +%Y%m%d%H%M%S)
+                Tmp_Dir=$(mktemp -dt "$Base_Path.$Time_Stamp.XXXXXXXXXX")
+                cd "$Tmp_Dir" || { printf "\033c"; echo -e ""; for i in {16..51} {51..16}; do echo -en "\e[38;5;${i}m#\e[0m"; done; echo; echo -e ""; echo -e '\e[38;5;82m'"Something went south. Exiting..."; echo -e ""; for i in {16..51} {51..16}; do echo -en "\e[38;5;${i}m#\e[0m"; done; echo; echo -e ""; tput sgr0; exit 1; }
+                if [ -f "/usr/share/keyrings/microsoft.gpg" ]; then
+                    rm -f "/usr/share/keyrings/microsoft.gpg"
+                fi
+                if [ -f "/etc/apt/sources.list.d/microsoft-vscode.list" ]; then
+                    rm -f "/etc/apt/sources.list.d/microsoft-vscode.list"
+                fi
+                wget -qO- --user-agent="Mozilla/5.0 Gecko/20100101" --timeout=30 "https://packages.microsoft.com/keys/microsoft.asc" | gpg --dearmor --yes --quiet -o "/usr/share/keyrings/microsoft.gpg"
+                sh -c 'echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/microsoft.gpg] https://packages.microsoft.com/repos/vscode stable main" > /etc/apt/sources.list.d/microsoft-vscode.list'
+                apt-get --yes update
+                apt-get --yes install code code-exploration linuxconfig
+                echo -e ""
+                read -rsp $'Press any key to continue...\n' -n1
+                rm -rf "$Tmp_Dir"
+            else
+                printf "\033c"
+                echo -e "Visual Studio Code is already installed."
+                echo -e ""
+                read -rsp $'Press any key to continue...\n' -n1
+                Main_Menu
+            fi
+            ;;
+        08 | 8)
+            printf "\033c"
+            if ! type element-desktop >/dev/null 2>&1; then
+                Base_Path=$(basename "$0")
+                Time_Stamp=$(date +%Y%m%d%H%M%S)
+                Tmp_Dir=$(mktemp -dt "$Base_Path.$Time_Stamp.XXXXXXXXXX")
+                cd "$Tmp_Dir" || { printf "\033c"; echo -e ""; for i in {16..51} {51..16}; do echo -en "\e[38;5;${i}m#\e[0m"; done; echo; echo -e ""; echo -e '\e[38;5;82m'"Something went south. Exiting..."; echo -e ""; for i in {16..51} {51..16}; do echo -en "\e[38;5;${i}m#\e[0m"; done; echo; echo -e ""; tput sgr0; exit 1; }
+                if [ -f "/usr/share/keyrings/element-io-archive-keyring.gpg" ]; then
+                    rm -f "/usr/share/keyrings/element-io-archive-keyring.gpg"
+                fi
+                if [ -f "/etc/apt/sources.list.d/element-io.list" ]; then
+                    rm -f "/etc/apt/sources.list.d/element-io.list"
+                fi
+                wget -qO- --user-agent="Mozilla/5.0 Gecko/20100101" --timeout=30 "https://packages.element.io/debian/element-io-archive-keyring.gpg" | gpg --dearmor --yes --quiet -o "/usr/share/keyrings/element-io-archive-keyring.gpg"
+                sh -c 'echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/element-io-archive-keyring.gpg] https://packages.element.io/debian/ default main" > /etc/apt/sources.list.d/element-io.list'
+                apt-get --yes update
+                apt-get --yes install element-desktop
+                echo -e ""
+                read -rsp $'Press any key to continue...\n' -n1
+                rm -rf "$Tmp_Dir"
+            else
+                printf "\033c"
+                echo -e "Element Desktop is already installed."
+                echo -e ""
+                read -rsp $'Press any key to continue...\n' -n1
+                Main_Menu
+            fi
+            ;;
+        09 | 9)
+            printf "\033c"
+            if ! type jami >/dev/null 2>&1; then
+                Base_Path=$(basename "$0")
+                Time_Stamp=$(date +%Y%m%d%H%M%S)
+                Tmp_Dir=$(mktemp -dt "$Base_Path.$Time_Stamp.XXXXXXXXXX")
+                cd "$Tmp_Dir" || { printf "\033c"; echo -e ""; for i in {16..51} {51..16}; do echo -en "\e[38;5;${i}m#\e[0m"; done; echo; echo -e ""; echo -e '\e[38;5;82m'"Something went south. Exiting..."; echo -e ""; for i in {16..51} {51..16}; do echo -en "\e[38;5;${i}m#\e[0m"; done; echo; echo -e ""; tput sgr0; exit 1; }
+                if [ -f "/usr/share/keyrings/jami-archive-keyring.gpg" ]; then
+                    rm -f "/usr/share/keyrings/jami-archive-keyring.gpg"
+                fi
+                if [ -f "/etc/apt/sources.list.d/jami.list" ]; then
+                    rm -f "/etc/apt/sources.list.d/jami.list"
+                fi
+                wget -qO- --user-agent="Mozilla/5.0 Gecko/20100101" --timeout=30 "https://dl.jami.net/public-key.gpg" | gpg --dearmor --yes --quiet -o "/usr/share/keyrings/jami-archive-keyring.gpg"
+                sh -c 'echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/jami-archive-keyring.gpg] https://dl.jami.net/nightly/ubuntu_22.04/ jami main" > /etc/apt/sources.list.d/jami.list'
+                apt-get --yes update
+                apt-get --yes install jami
+                echo -e ""
+                read -rsp $'Press any key to continue...\n' -n1
+                rm -rf "$Tmp_Dir"
+            else
+                printf "\033c"
+                echo -e "Jami is already installed."
+                echo -e ""
+                read -rsp $'Press any key to continue...\n' -n1
+                Main_Menu
+            fi
+            ;;
+        10)
+            printf "\033c"
+            if ! type signal-desktop >/dev/null 2>&1; then
+                Base_Path=$(basename "$0")
+                Time_Stamp=$(date +%Y%m%d%H%M%S)
+                Tmp_Dir=$(mktemp -dt "$Base_Path.$Time_Stamp.XXXXXXXXXX")
+                cd "$Tmp_Dir" || { printf "\033c"; echo -e ""; for i in {16..51} {51..16}; do echo -en "\e[38;5;${i}m#\e[0m"; done; echo; echo -e ""; echo -e '\e[38;5;82m'"Something went south. Exiting..."; echo -e ""; for i in {16..51} {51..16}; do echo -en "\e[38;5;${i}m#\e[0m"; done; echo; echo -e ""; tput sgr0; exit 1; }
+                if [ -f "/usr/share/keyrings/signal-desktop-keyring.gpg" ]; then
+                    rm -f "/usr/share/keyrings/signal-desktop-keyring.gpg"
+                fi
+                if [ -f "/etc/apt/sources.list.d/signal-xenial.list" ]; then
+                    rm -f "/etc/apt/sources.list.d/signal-xenial.list"
+                fi
+                wget -qO- --user-agent="Mozilla/5.0 Gecko/20100101" --timeout=30 "https://updates.signal.org/desktop/apt/keys.asc" | gpg --dearmor --yes --quiet -o "/usr/share/keyrings/signal-desktop-keyring.gpg"
+                sh -c 'echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/signal-desktop-keyring.gpg] https://updates.signal.org/desktop/apt xenial main" > /etc/apt/sources.list.d/signal-xenial.list'
+                apt-get --yes update
+                apt-get --yes install signal-desktop
+                echo -e ""
+                read -rsp $'Press any key to continue...\n' -n1
+                rm -rf "$Tmp_Dir"
+            else
+                printf "\033c"
+                echo -e "Signal Desktop is already installed."
+                echo -e ""
+                read -rsp $'Press any key to continue...\n' -n1
+                Main_Menu
+            fi
+            ;;
+        11)
+            printf "\033c"
+            if ! type skypeforlinux >/dev/null 2>&1; then
+                Base_Path=$(basename "$0")
+                Time_Stamp=$(date +%Y%m%d%H%M%S)
+                Tmp_Dir=$(mktemp -dt "$Base_Path.$Time_Stamp.XXXXXXXXXX")
+                cd "$Tmp_Dir" || { printf "\033c"; echo -e ""; for i in {16..51} {51..16}; do echo -en "\e[38;5;${i}m#\e[0m"; done; echo; echo -e ""; echo -e '\e[38;5;82m'"Something went south. Exiting..."; echo -e ""; for i in {16..51} {51..16}; do echo -en "\e[38;5;${i}m#\e[0m"; done; echo; echo -e ""; tput sgr0; exit 1; }
+                if [ -f "/usr/share/keyrings/skype.gpg" ]; then
+                    rm -f "/usr/share/keyrings/skype.gpg"
+                fi
+                if [ -f "/etc/apt/sources.list.d/skype.list" ]; then
+                    rm -f "/etc/apt/sources.list.d/skype.list"
+                fi
+                wget -qO- --user-agent="Mozilla/5.0 Gecko/20100101" --timeout=30 "https://repo.skype.com/data/SKYPE-GPG-KEY" | gpg --dearmor --yes --quiet -o "/usr/share/keyrings/skype.gpg"
+                sh -c 'echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/skype.gpg] https://repo.skype.com/deb stable main" > /etc/apt/sources.list.d/skype.list'
+                apt-get --yes update
+                apt-get --yes install skypeforlinux
+                echo -e ""
+                read -rsp $'Press any key to continue...\n' -n1
+                rm -rf "$Tmp_Dir"
+            else
+                printf "\033c"
+                echo -e "Skype is already installed."
+                echo -e ""
+                read -rsp $'Press any key to continue...\n' -n1
+                Main_Menu
+            fi
+            ;;
+        12)
+            printf "\033c"
+            if ! type teams >/dev/null 2>&1; then
+                Base_Path=$(basename "$0")
+                Time_Stamp=$(date +%Y%m%d%H%M%S)
+                Tmp_Dir=$(mktemp -dt "$Base_Path.$Time_Stamp.XXXXXXXXXX")
+                cd "$Tmp_Dir" || { printf "\033c"; echo -e ""; for i in {16..51} {51..16}; do echo -en "\e[38;5;${i}m#\e[0m"; done; echo; echo -e ""; echo -e '\e[38;5;82m'"Something went south. Exiting..."; echo -e ""; for i in {16..51} {51..16}; do echo -en "\e[38;5;${i}m#\e[0m"; done; echo; echo -e ""; tput sgr0; exit 1; }
+                if [ -f "/usr/share/keyrings/microsoft.gpg" ]; then
+                    rm -f "/usr/share/keyrings/microsoft.gpg"
+                fi
+                if [ -f "/etc/apt/sources.list.d/microsoft-teams.list" ]; then
+                    rm -f "/etc/apt/sources.list.d/microsoft-teams.list"
+                fi
+                wget -qO- --user-agent="Mozilla/5.0 Gecko/20100101" --timeout=30 "https://packages.microsoft.com/keys/microsoft.asc" | gpg --dearmor --yes --quiet -o "/usr/share/keyrings/microsoft.gpg"
+                sh -c 'echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/microsoft.gpg] https://packages.microsoft.com/repos/ms-teams stable main" > /etc/apt/sources.list.d/microsoft-teams.list'
+                apt-get --yes update
+                apt-get --yes install teams
+                echo -e ""
+                read -rsp $'Press any key to continue...\n' -n1
+                rm -rf "$Tmp_Dir"
+            else
+                printf "\033c"
+                echo -e "Microsoft Teams is already installed."
+                echo -e ""
+                read -rsp $'Press any key to continue...\n' -n1
+                Main_Menu
+            fi
+            ;;
+        13)
+            printf "\033c"
+            if ! type desktopeditors >/dev/null 2>&1; then
+                if [ -f "/usr/share/keyrings/onlyoffice.gpg" ]; then
+                    rm -f "/usr/share/keyrings/onlyoffice.gpg"
+                fi
+                if [ -f "/etc/apt/sources.list.d/onlyoffice.list" ]; then
+                    rm -f "/etc/apt/sources.list.d/onlyoffice.list"
+                fi
+                if ! type dirmngr >/dev/null 2>&1; then
+                    apt-get --yes update
+                    apt-get --yes install dirmngr
+                fi
+                test -d "${HOME}/.gnupg" || mkdir -p "${HOME}/.gnupg"
+                chmod 700 "${HOME}/.gnupg"
+                gpg --no-default-keyring --keyring gnupg-ring:/tmp/onlyoffice.gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 8320ca65cb2de8e5
+                chmod 644 "/tmp/onlyoffice.gpg"
+                chown root:root "/tmp/onlyoffice.gpg"
+                mv "/tmp/onlyoffice.gpg" "/usr/share/keyrings/onlyoffice.gpg"
+                rm -f "/tmp/onlyoffice.gpg"
+                sh -c 'echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/onlyoffice.gpg] https://download.onlyoffice.com/repo/debian squeeze main" > /etc/apt/sources.list.d/onlyoffice.list'
+                apt-get --yes update
+                apt-get --yes install onlyoffice-desktopeditors
+                echo -e ""
+                read -rsp $'Press any key to continue...\n' -n1
+            else
+                printf "\033c"
+                echo -e "ONLYOFFICE Desktop Editors is already installed."
+                echo -e ""
+                read -rsp $'Press any key to continue...\n' -n1
+                Main_Menu
+            fi
+            ;;
+        14)
+            printf "\033c"
+            if ! type flatpak >/dev/null 2>&1; then
+                apt-get --yes update
+                apt-get --yes install flatpak flatpak-xdg-utils xdg-desktop-portal xdg-desktop-portal-gtk
+                if type gnome-software >/dev/null 2>&1; then
+                    apt-get --yes update
+                    apt-get --yes install gnome-software-plugin-flatpak xdg-desktop-portal-gnome
+                    if type plasma-discover >/dev/null 2>&1; then
+                        apt-get --yes update
+                        apt-get --yes install plasma-discover-backend-flatpak xdg-desktop-portal-kde
+                    fi
+                fi
+                flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+                echo -e ""
+                read -rsp $'Press any key to continue...\n' -n1
+                Main_Menu
+            else
+                printf "\033c"
+                echo -e "Flatpak is already installed."
+                echo -e ""
+                read -rsp $'Press any key to continue...\n' -n1
+                Main_Menu
+            fi
+            ;;
+        Q | q)
+            printf "\033c"
+            exit 0
+            ;;
+        *)
+            printf "\033c"
+            echo -e ""
+            echo -e "\"$choice\" is an invalid option!!!"
+            echo -e ""
+            echo -e "Correct options to choose are from 1-2-3-4-5-6-7-8-9-10-11-12-13-14-Q"
+            echo -e ""
+            read -rsp $'Press any key to try again...\n' -n1
+            Main_Menu
+            ;;
+    esac
+}
+while :
+do
+    Main_Menu
+done
