@@ -38,7 +38,7 @@ sudo chmod 755 /usr/local/bin/sryrms
 Open terminal & run,  
 
 ```sh
-sryrms
+sudo sryrms
 ```  
 
 And follow the simple interactive menu of `SryRMS` to install your desired applications.  
