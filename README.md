@@ -56,6 +56,9 @@ If you liked `SryRMS`, please consider supporting it, even the smallest contribu
 #### What is the story behind the wonky script name? What on earth does `SryRMS` mean?  
 Sadly, I can't reveal the origin of the name `SryRMS` as I'm bound by the oath of the church of Emacs and if I were to spill the beans, editor of the beast will come after me, so...  
 
+#### Why Flatpak? Isn't it available in official Ubuntu repositories?  
+Yes, it is but `SryRMS` installs `flatpak` in a way that nicely integrates Flatpak packages with GNOME Software Center and KDE Discover. `SryRMS` also enables the all important Flathub repository while installing `flatpak`.  
+
 ### License :
 
 [![Public Domain Mark](http://i.creativecommons.org/p/mark/1.0/88x31.png)](http://creativecommons.org/publicdomain/mark/1.0/)  
