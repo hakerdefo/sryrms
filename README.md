@@ -1,6 +1,6 @@
 # SryRMS
 
-`SryRMS` helps you in installing some popular proprietary as well as libre applications not available in the official repositories of Ubuntu. Currently `SryRMS` helps you in installing following applications in the good ole `deb` packaging format. All of these applications are sourced from their original upstream projects and not from third parties or from some random folks on the internet.  
+`SryRMS` helps you in installing some popular proprietary as well as libre applications not available in the official repositories of Ubuntu. Currently, `SryRMS` helps you in installing following applications in the good ole `deb` packaging format. All of these applications are sourced from their original upstream projects and not from third parties or from some random folks on the internet.  
 
  - Brave browser  
  - Chrome browser  
@@ -57,11 +57,14 @@ If you liked `SryRMS`, please consider supporting it, even the smallest contribu
 
 ### FAQ :
 
-#### What is the story behind the wonky script name? What on earth does `SryRMS` mean?  
-Sadly, I can't reveal the origin of the name `SryRMS` as I'm bound by the oath of the church of Emacs and if I were to spill the beans, editor of the beast will come after me, so...  
+#### What is the story behind the wonky script name? What on earth does SryRMS mean?  
+Sadly, I can't reveal the origin of the name `SryRMS` as I'm bound by the oath of the church of Emacs and if I were to spill the beans, the editor of the beast will come after me, so...  
 
 #### Why Flatpak? Isn't it available in official Ubuntu repositories?  
-Yes, it is but `SryRMS` installs `flatpak` in a way that nicely integrates Flatpak packages with GNOME Software Center and KDE Discover. `SryRMS` also enables the all important Flathub repository while installing `flatpak`.  
+Yes, it is, but `SryRMS` installs `flatpak` in a way that nicely integrates Flatpak packages with GNOME Software Center and KDE Discover. `SryRMS` also enables the all important Flathub repository while installing `flatpak`.  
+
+#### Will you include my favorite applications X, Y & Z in SryRMS?  
+If the upstream developer(s) have a Debian repository and the released version(s) are compatible with current Ubuntu and Debian systems, then yes, I'll for sure include it in `SryRMS`. Please [create a pull request](https://github.com/hakerdefo/sryrms/pulls) and I'll take it from there.    
 
 ### License :
 
