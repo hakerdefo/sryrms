@@ -49,7 +49,7 @@ And follow the simple interactive menu of `SryRMS` to install your desired appli
 
 ### Support :
 
-If you liked `SryRMS`, please consider supporting it, even the smallest contribution goes a long way. It is quick & easy via PayPal, Buy Me a Coffee, Liberapay or Stripe:  
+If you liked `SryRMS`, please consider supporting it, even the smallest contribution goes a long way. It is quick & easy via PayPal, Buy Me a Coffee or Liberapay:  
 
 [![Support via PayPal](https://cdn.jsdelivr.net/gh/twolfson/paypal-github-button@1.0.0/dist/button.svg)](https://paypal.me/hakerdefo)  
 
