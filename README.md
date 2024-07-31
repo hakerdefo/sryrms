@@ -57,8 +57,6 @@ If you liked `SryRMS`, please consider supporting it, even the smallest contribu
 
 [![Support via Liberapay](https://liberapay.com/assets/widgets/donate.svg)](https://liberapay.com/hakerdefo/donate)  
 
-[**Support via Stripe**](https://buy.stripe.com/28odRcfob9or41OdQQ)
-
 ### FAQ :
 
 #### What is the story behind the wonky script name? What on earth does SryRMS mean?  
