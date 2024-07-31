@@ -30,6 +30,7 @@ function Main_Menu (){
         exit 1
     fi
 
+    type apt >/dev/null 2>&1 || { printf "\033c"; echo -e ""; for i in {16..51} {51..16}; do echo -en "\e[38;5;${i}m#\e[0m"; done; echo; echo -e ""; echo -e '\e[38;5;82m'"A required SryRMS dependency \"APT\" is unavailable"; echo -e '\e[38;5;82m'"\"SryRMS\" is only compatible with \"APT\" package manager based systems!"; echo -e '\e[38;5;82m'"Your system doesn't seem to have \"apt\" package manager system installed!"; echo -e '\e[38;5;82m'"Please visit the wiki page of \"APT\" for more info"; echo -e '\e[38;5;82m'"https://wiki.debian.org/AptCLI"; echo -e ""; for i in {16..51} {51..16}; do echo -en "\e[38;5;${i}m#\e[0m"; done; echo; echo -e ""; tput sgr0; exit 1; }
     type wget >/dev/null 2>&1 || { printf "\033c"; echo -e ""; for i in {16..51} {51..16}; do echo -en "\e[38;5;${i}m#\e[0m"; done; echo; echo -e ""; echo -e '\e[38;5;82m'"A required SryRMS dependency \"Wget\" is unavailable"; echo -e '\e[38;5;82m'"\"Wget\" is available for almost all linux distros."; echo -e '\e[38;5;82m'"Please install \"wget\" using your package manager."; echo -e '\e[38;5;82m'"Please visit the homepage of \"Wget\" for more info"; echo -e '\e[38;5;82m'"https://www.gnu.org/software/wget/"; echo -e ""; for i in {16..51} {51..16}; do echo -en "\e[38;5;${i}m#\e[0m"; done; echo; echo -e ""; tput sgr0; exit 1; }
     type gpg >/dev/null 2>&1 || { printf "\033c"; echo -e ""; for i in {16..51} {51..16}; do echo -en "\e[38;5;${i}m#\e[0m"; done; echo; echo -e ""; echo -e '\e[38;5;82m'"A required SryRMS dependency \"GnuPG\" is unavailable"; echo -e '\e[38;5;82m'"\"GnuPG\" is available for almost all linux distros."; echo -e '\e[38;5;82m'"Please install \"gpg\" using your package manager."; echo -e '\e[38;5;82m'"Please visit the homepage of \"GnuPG\" for more info"; echo -e '\e[38;5;82m'"https://www.gnupg.org/"; echo -e ""; for i in {16..51} {51..16}; do echo -en "\e[38;5;${i}m#\e[0m"; done; echo; echo -e ""; tput sgr0; exit 1; }
 
@@ -39,17 +40,21 @@ function Main_Menu (){
     echo -e "01 Install Brave browser"
     echo -e "02 Install Chrome browser"
     echo -e "03 Install Edge browser"
-    echo -e "04 Install Opera browser"
-    echo -e "05 Install Vivaldi browser"
-    echo -e "06 Install Spotify"
-    echo -e "07 Install Visual Studio Code"
-    echo -e "08 Install Element"
-    echo -e "09 Install Jami"
-    echo -e "10 Install Signal"
-    echo -e "11 Install Skype"
-    echo -e "12 Install Teams"
-    echo -e "13 Install ONLYOFFICE"
-    echo -e "14 Install Flatpak"
+    echo -e "04 Install Firefox (deb)"
+    echo -e "05 Install Firefox - Beta (deb)"
+    echo -e "06 Install Firefox - Developer (deb)"
+    echo -e "07 Install Firefox - Nightly (deb)"
+    echo -e "08 Install Opera browser"
+    echo -e "09 Install Vivaldi browser"
+    echo -e "10 Install Spotify"
+    echo -e "11 Install Visual Studio Code"
+    echo -e "12 Install Element"
+    echo -e "13 Install Jami"
+    echo -e "14 Install Signal"
+    echo -e "15 Install Skype"
+    echo -e "16 Install Teams"
+    echo -e "17 Install ONLYOFFICE"
+    echo -e "18 Install Flatpak"
     echo -e "Q  Quit SryRMS"
     echo -e ""
     echo -e "*******************************************"
@@ -145,6 +150,154 @@ function Main_Menu (){
             ;;
         04 | 4)
             printf "\033c"
+            if ! type firefox >/dev/null 2>&1; then
+                Base_Path=$(basename "$0")
+                Time_Stamp=$(date +%Y%m%d%H%M%S)
+                Tmp_Dir=$(mktemp -dt "$Base_Path.$Time_Stamp.XXXXXXXXXX")
+                cd "$Tmp_Dir" || { printf "\033c"; echo -e ""; for i in {16..51} {51..16}; do echo -en "\e[38;5;${i}m#\e[0m"; done; echo; echo -e ""; echo -e '\e[38;5;82m'"Something went south. Exiting..."; echo -e ""; for i in {16..51} {51..16}; do echo -en "\e[38;5;${i}m#\e[0m"; done; echo; echo -e ""; tput sgr0; exit 1; }
+                if [ -f "/usr/share/keyrings/mozilla.gpg" ]; then
+                    rm -f "/usr/share/keyrings/mozilla.gpg"
+                fi
+                if [ -f "/etc/apt/sources.list.d/mozilla.list" ]; then
+                    rm -f "/etc/apt/sources.list.d/mozilla.list"
+                fi
+                wget -qO- --user-agent="Mozilla/5.0 Gecko/20100101" --timeout=30 "https://packages.mozilla.org/apt/repo-signing-key.gpg" | gpg --dearmor --yes --quiet -o "/usr/share/keyrings/mozilla.gpg"
+                sh -c 'echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/mozilla.gpg] https://packages.mozilla.org/apt mozilla main" > /etc/apt/sources.list.d/mozilla.list'
+                if [ -f "/etc/apt/preferences.d/mozilla" ]; then
+                    rm -f "/etc/apt/preferences.d/mozilla"
+                fi
+                {
+                echo 'Package: *'
+                echo 'Pin: origin packages.mozilla.org'
+                echo 'Pin-Priority: 1000'
+                } >> "/etc/apt/preferences.d/mozilla"
+                apt-get --yes update
+                apt-get --yes install firefox
+                echo -e ""
+                read -rsp $'Press any key to continue...\n' -n1
+                rm -rf "$Tmp_Dir"
+                Main_Menu
+            else
+                printf "\033c"
+                echo -e "Firefox browser is already installed."
+                echo -e ""
+                read -rsp $'Press any key to continue...\n' -n1
+                Main_Menu
+            fi
+            ;;
+        05 | 5)
+            printf "\033c"
+            if ! type firefox-beta >/dev/null 2>&1; then
+                Base_Path=$(basename "$0")
+                Time_Stamp=$(date +%Y%m%d%H%M%S)
+                Tmp_Dir=$(mktemp -dt "$Base_Path.$Time_Stamp.XXXXXXXXXX")
+                cd "$Tmp_Dir" || { printf "\033c"; echo -e ""; for i in {16..51} {51..16}; do echo -en "\e[38;5;${i}m#\e[0m"; done; echo; echo -e ""; echo -e '\e[38;5;82m'"Something went south. Exiting..."; echo -e ""; for i in {16..51} {51..16}; do echo -en "\e[38;5;${i}m#\e[0m"; done; echo; echo -e ""; tput sgr0; exit 1; }
+                if [ -f "/usr/share/keyrings/mozilla.gpg" ]; then
+                    rm -f "/usr/share/keyrings/mozilla.gpg"
+                fi
+                if [ -f "/etc/apt/sources.list.d/mozilla.list" ]; then
+                    rm -f "/etc/apt/sources.list.d/mozilla.list"
+                fi
+                wget -qO- --user-agent="Mozilla/5.0 Gecko/20100101" --timeout=30 "https://packages.mozilla.org/apt/repo-signing-key.gpg" | gpg --dearmor --yes --quiet -o "/usr/share/keyrings/mozilla.gpg"
+                sh -c 'echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/mozilla.gpg] https://packages.mozilla.org/apt mozilla main" > /etc/apt/sources.list.d/mozilla.list'
+                if [ -f "/etc/apt/preferences.d/mozilla" ]; then
+                    rm -f "/etc/apt/preferences.d/mozilla"
+                fi
+                {
+                echo 'Package: *'
+                echo 'Pin: origin packages.mozilla.org'
+                echo 'Pin-Priority: 1000'
+                } >> "/etc/apt/preferences.d/mozilla"
+                apt-get --yes update
+                apt-get --yes install firefox-beta
+                echo -e ""
+                read -rsp $'Press any key to continue...\n' -n1
+                rm -rf "$Tmp_Dir"
+                Main_Menu
+            else
+                printf "\033c"
+                echo -e "Firefox - Beta is already installed."
+                echo -e ""
+                read -rsp $'Press any key to continue...\n' -n1
+                Main_Menu
+            fi
+            ;;
+        06 | 6)
+            printf "\033c"
+            if ! type firefox-devedition >/dev/null 2>&1; then
+                Base_Path=$(basename "$0")
+                Time_Stamp=$(date +%Y%m%d%H%M%S)
+                Tmp_Dir=$(mktemp -dt "$Base_Path.$Time_Stamp.XXXXXXXXXX")
+                cd "$Tmp_Dir" || { printf "\033c"; echo -e ""; for i in {16..51} {51..16}; do echo -en "\e[38;5;${i}m#\e[0m"; done; echo; echo -e ""; echo -e '\e[38;5;82m'"Something went south. Exiting..."; echo -e ""; for i in {16..51} {51..16}; do echo -en "\e[38;5;${i}m#\e[0m"; done; echo; echo -e ""; tput sgr0; exit 1; }
+                if [ -f "/usr/share/keyrings/mozilla.gpg" ]; then
+                    rm -f "/usr/share/keyrings/mozilla.gpg"
+                fi
+                if [ -f "/etc/apt/sources.list.d/mozilla.list" ]; then
+                    rm -f "/etc/apt/sources.list.d/mozilla.list"
+                fi
+                wget -qO- --user-agent="Mozilla/5.0 Gecko/20100101" --timeout=30 "https://packages.mozilla.org/apt/repo-signing-key.gpg" | gpg --dearmor --yes --quiet -o "/usr/share/keyrings/mozilla.gpg"
+                sh -c 'echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/mozilla.gpg] https://packages.mozilla.org/apt mozilla main" > /etc/apt/sources.list.d/mozilla.list'
+                if [ -f "/etc/apt/preferences.d/mozilla" ]; then
+                    rm -f "/etc/apt/preferences.d/mozilla"
+                fi
+                {
+                echo 'Package: *'
+                echo 'Pin: origin packages.mozilla.org'
+                echo 'Pin-Priority: 1000'
+                } >> "/etc/apt/preferences.d/mozilla"
+                apt-get --yes update
+                apt-get --yes install firefox-devedition
+                echo -e ""
+                read -rsp $'Press any key to continue...\n' -n1
+                rm -rf "$Tmp_Dir"
+                Main_Menu
+            else
+                printf "\033c"
+                echo -e "Firefox - Developer Edition is already installed."
+                echo -e ""
+                read -rsp $'Press any key to continue...\n' -n1
+                Main_Menu
+            fi
+            ;;
+        07 | 7)
+            printf "\033c"
+            if ! type firefox-nightly >/dev/null 2>&1; then
+                Base_Path=$(basename "$0")
+                Time_Stamp=$(date +%Y%m%d%H%M%S)
+                Tmp_Dir=$(mktemp -dt "$Base_Path.$Time_Stamp.XXXXXXXXXX")
+                cd "$Tmp_Dir" || { printf "\033c"; echo -e ""; for i in {16..51} {51..16}; do echo -en "\e[38;5;${i}m#\e[0m"; done; echo; echo -e ""; echo -e '\e[38;5;82m'"Something went south. Exiting..."; echo -e ""; for i in {16..51} {51..16}; do echo -en "\e[38;5;${i}m#\e[0m"; done; echo; echo -e ""; tput sgr0; exit 1; }
+                if [ -f "/usr/share/keyrings/mozilla.gpg" ]; then
+                    rm -f "/usr/share/keyrings/mozilla.gpg"
+                fi
+                if [ -f "/etc/apt/sources.list.d/mozilla.list" ]; then
+                    rm -f "/etc/apt/sources.list.d/mozilla.list"
+                fi
+                wget -qO- --user-agent="Mozilla/5.0 Gecko/20100101" --timeout=30 "https://packages.mozilla.org/apt/repo-signing-key.gpg" | gpg --dearmor --yes --quiet -o "/usr/share/keyrings/mozilla.gpg"
+                sh -c 'echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/mozilla.gpg] https://packages.mozilla.org/apt mozilla main" > /etc/apt/sources.list.d/mozilla.list'
+                if [ -f "/etc/apt/preferences.d/mozilla" ]; then
+                    rm -f "/etc/apt/preferences.d/mozilla"
+                fi
+                {
+                echo 'Package: *'
+                echo 'Pin: origin packages.mozilla.org'
+                echo 'Pin-Priority: 1000'
+                } >> "/etc/apt/preferences.d/mozilla"
+                apt-get --yes update
+                apt-get --yes install firefox-nightly
+                echo -e ""
+                read -rsp $'Press any key to continue...\n' -n1
+                rm -rf "$Tmp_Dir"
+                Main_Menu
+            else
+                printf "\033c"
+                echo -e "Firefox - Nightly is already installed."
+                echo -e ""
+                read -rsp $'Press any key to continue...\n' -n1
+                Main_Menu
+            fi
+            ;;
+        08 | 8)
+            printf "\033c"
             if ! type opera-stable >/dev/null 2>&1; then
                 Base_Path=$(basename "$0")
                 Time_Stamp=$(date +%Y%m%d%H%M%S)
@@ -171,7 +324,7 @@ function Main_Menu (){
                 Main_Menu
             fi
             ;;
-        05 | 5)
+        09 | 9)
             printf "\033c"
             if ! type vivaldi-stable >/dev/null 2>&1; then
                 Base_Path=$(basename "$0")
@@ -199,7 +352,7 @@ function Main_Menu (){
                 Main_Menu
             fi
             ;;
-        06 | 6)
+        10)
             printf "\033c"
             if ! type spotify-client >/dev/null 2>&1; then
                 Base_Path=$(basename "$0")
@@ -227,7 +380,7 @@ function Main_Menu (){
                 Main_Menu
             fi
             ;;
-        07 | 7)
+        11)
             printf "\033c"
             if ! type code >/dev/null 2>&1; then
                 Base_Path=$(basename "$0")
@@ -255,7 +408,7 @@ function Main_Menu (){
                 Main_Menu
             fi
             ;;
-        08 | 8)
+        12)
             printf "\033c"
             if ! type element-desktop >/dev/null 2>&1; then
                 Base_Path=$(basename "$0")
@@ -283,7 +436,7 @@ function Main_Menu (){
                 Main_Menu
             fi
             ;;
-        09 | 9)
+        13)
             printf "\033c"
             if ! type jami >/dev/null 2>&1; then
                 Base_Path=$(basename "$0")
@@ -311,7 +464,7 @@ function Main_Menu (){
                 Main_Menu
             fi
             ;;
-        10)
+        14)
             printf "\033c"
             if ! type signal-desktop >/dev/null 2>&1; then
                 Base_Path=$(basename "$0")
@@ -339,7 +492,7 @@ function Main_Menu (){
                 Main_Menu
             fi
             ;;
-        11)
+        15)
             printf "\033c"
             if ! type skypeforlinux >/dev/null 2>&1; then
                 Base_Path=$(basename "$0")
@@ -367,7 +520,7 @@ function Main_Menu (){
                 Main_Menu
             fi
             ;;
-        12)
+        16)
             printf "\033c"
             if ! type teams >/dev/null 2>&1; then
                 Base_Path=$(basename "$0")
@@ -395,7 +548,7 @@ function Main_Menu (){
                 Main_Menu
             fi
             ;;
-        13)
+        17)
             printf "\033c"
             if ! type desktopeditors >/dev/null 2>&1; then
                 if [ -f "/usr/share/keyrings/onlyoffice.gpg" ]; then
@@ -428,7 +581,7 @@ function Main_Menu (){
                 Main_Menu
             fi
             ;;
-        14)
+        18)
             printf "\033c"
             if ! type flatpak >/dev/null 2>&1; then
                 apt-get --yes update
@@ -462,7 +615,7 @@ function Main_Menu (){
             echo -e ""
             echo -e "\"$choice\" is an invalid option!!!"
             echo -e ""
-            echo -e "Correct options to choose are from 1-2-3-4-5-6-7-8-9-10-11-12-13-14-Q"
+            echo -e "Correct options to choose are from 1-2-3-4----16-17-18-Q"
             echo -e ""
             read -rsp $'Press any key to try again...\n' -n1
             Main_Menu
