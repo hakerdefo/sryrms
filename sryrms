@@ -40,7 +40,7 @@ function Main_Menu (){
     echo -e "01 Install Brave browser"
     echo -e "02 Install Chrome browser"
     echo -e "03 Install Edge browser"
-    echo -e "04 Install Firefox (deb)"
+    echo -e "04 Install Firefox browser (deb)"
     echo -e "05 Install Firefox - Beta (deb)"
     echo -e "06 Install Firefox - Developer (deb)"
     echo -e "07 Install Firefox - Nightly (deb)"
