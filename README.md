@@ -4,7 +4,11 @@
 
  - Brave browser  
  - Chrome browser  
- - Edge browser  
+ - Edge browser
+ - Firefox (deb)
+ - Firefox - Beta (deb)
+ - Firefox - Developer (deb)
+ - Firefox - Nightly (deb)
  - Opera browser  
  - Vivaldi browser  
  - Spotify  
