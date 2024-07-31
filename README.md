@@ -5,7 +5,7 @@
  - Brave browser  
  - Chrome browser  
  - Edge browser
- - Firefox (deb)
+ - Firefox browser (deb)
  - Firefox - Beta (deb)
  - Firefox - Developer (deb)
  - Firefox - Nightly (deb)
